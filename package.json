@@ -4,7 +4,25 @@
   "description": "Spend and Save app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run droptables:test && npm run createtables:test && npm run seed:test && cross-env NODE_ENV=test nyc --reporter=text --reporter=lcov mocha --require @babel/register --require babel-polyfill ./server/tests/*.spec.js --timeout 2000 --exit",
+    "dev": "nodemon --exec babel-node ./server/app.js",
+    "start": "npm run build && npm run droptables:pro && npm run createtables:pro && npm run seed:pro && cross-env NODE_ENV=production babel-node dist/index.js",
+    "createdb:dev": "npx sequelize-cli db:create",
+    "createtables:dev": "npx sequelize-cli db:migrate",
+    "seed:dev": "npx sequelize-cli db:seed:all",
+    "droptables:dev": "npx sequelize-cli db:migrate:undo:all",
+    "createdb:test": "cross-env NODE_ENV=test npx sequelize-cli db:create",
+    "createtables:test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate",
+    "seed:test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:seed:all",
+    "droptables:test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate:undo:all",
+    "createdb:pro": "cross-env NODE_ENV=production npx sequelize-cli db:create",
+    "createtables:pro": "cross-env NODE_ENV=production npx sequelize-cli db:migrate",
+    "seed:pro": "cross-env NODE_ENV=production npx sequelize-cli db:seed:all",
+    "droptables:pro": "cross-env NODE_ENV=production npx sequelize-cli db:migrate:undo:all",
+    "coveralls": "npm test && nyc report --reporter=text-lcov | coveralls",
+    "kill": "Taskkill /IM node.exe /F",
+    "build": "babel server -d dist",
+    "lint": "eslint ./server"
   },
   "repository": {
     "type": "git",
